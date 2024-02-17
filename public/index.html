@@ -3,14 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OneInc Demo</title>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script async defer src="https://testportalone.processonepayments.com/GenericModalV2/PortalOne.js"></script>
-    <script src="script.js" defer></script>
+    <title>One Inc Demos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <button id="savePaymentMethodButton">Save Payment Method</button>
-    <button id="launchModalButton">Make Payment</button>
-    <div id="portalOneContainer"></div>
+    <div class="container">
+        <h1 class="text-center mb-4">One Inc Demos</h1>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="portalKey">Portal Authentication Key:</label>
+                    <input type="text" class="form-control" id="portalKey" placeholder="Enter Portal Authentication Key" value="53471279-ce51-4e8f-830f-374dad91e561">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="externalCustomerId">External Customer ID:</label>
+                    <input type="text" class="form-control" id="externalCustomerId" placeholder="Enter External Customer ID" value="3333-4444-5555">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-primary" id="getCustomerIdButton">Get Customer ID</button>
+                <input type="text" class="form-control" id="customerIdDisplay" readonly>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <button class="btn btn-success" id="savePaymentMethodButton">Save Pay Method</button>
+                <button class="btn btn-primary ml-2" id="launchModalButton">Make Payment</button>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div id="portalOneContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://testportalone.processonepayments.com/GenericModalV2/PortalOne.js" async defer></script>
+    <script src="script.js" defer></script>
 </body>
 </html>

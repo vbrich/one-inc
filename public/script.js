@@ -1,62 +1,49 @@
 $(document).ready(function() {
-    console.log('Document ready...');
-    
-    // Function to create customer ID
-    async function createCustomerId() {
+    const externalCustomerIdInput = $('#externalCustomerId');
+    const portalKeyInput = $('#portalKey');
+    const customerIdDisplay = $('#customerIdDisplay');
+    const portalOneContainer = $('#portalOneContainer');
+
+    let customerId = null;
+    let portalKey = portalKeyInput.val();
+
+    $('#getCustomerIdButton').click(async function() {
         try {
-            console.log('Creating customer ID...');
-            const response = await fetch('https://testportalone.processonepayments.com/Api/Api/Customer/CreateAccount', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    ExternalCustomerId: 'customer12345',
-                    CustomerName: 'John Smith',
-                    PortalOneAuthenticationKey: '53471279-ce51-4e8f-830f-374dad91e561'
-                })
-            });
-            const data = await response.json();
-            console.log('Customer ID created:', data.CustomerId);
-            return data.CustomerId;
+            externalCustomerId = externalCustomerIdInput.val();
+            customerId = await getCustomerIdFromServer(externalCustomerId);
+            customerIdDisplay.val(customerId);
         } catch (error) {
-            console.error('Error creating customer ID:', error.message);
+            console.error('Error fetching Customer ID:', error.message);
+        }
+    });
+
+    async function getCustomerIdFromServer(externalCustomerId) {
+        try {
+            const response = await fetch(`/createCustomerId?externalCustomerId=${externalCustomerId}&portalKey=${portalKey}`);
+            const data = await response.json();
+            return data.customerId;
+        } catch (error) {
+            console.error('Error fetching customer ID from server:', error.message);
             return null;
         }
     }
 
-    // Function to get session ID from API
-    async function getSessionId(customerId) {
+    async function getSessionIdFromServer(customerId) {
         try {
-            console.log('Fetching session ID...');
-            const response = await fetch(`https://testportalone.processonepayments.com/Api/Api/Session/Create?PortalOneAuthenticationKey=53471279-ce51-4e8f-830f-374dad91e561&CustomerId=${customerId}`);
+            const response = await fetch(`/getSessionId?customerId=${customerId}&portalKey=${portalKey}`);
             const data = await response.json();
-            console.log('Session ID response:', data);
-            return data.PortalOneSessionKey;
+            return data.sessionId;
         } catch (error) {
-            console.error('Error fetching session ID:', error.message);
+            console.error('Error fetching session ID from server:', error.message);
             return null;
         }
     }
 
-    // Function to launch the modal for saving payment methods
     async function launchSavePaymentMethodModal() {
-        console.log('Launching modal to save payment method...');
-        const customerId = await createCustomerId();
-        if (!customerId) {
-            console.error('Error getting customer ID');
-            return;
-        }
-        const sessionId = await getSessionId(customerId);
-        if (!sessionId) {
-            console.error('Error getting session ID');
-            return;
-        }
+        const sessionId = await getSessionIdFromServer(customerId);
         console.log('Session ID obtained:', sessionId);
-        // Launch modal for saving payment method
-        let container = $('#portalOneContainer');
-        container.portalOne();
-        let dialog = container.data('portalOne');
+        portalOneContainer.portalOne();
+        let dialog = portalOneContainer.data('portalOne');
         dialog.savePaymentMethod({
             'paymentCategory': 'CreditCard',
             'billingZip': '95630',
@@ -71,24 +58,11 @@ $(document).ready(function() {
         });
     }
 
-    // Function to launch the modal for making payment
     async function launchMakePaymentModal() {
-        console.log('Launching modal to make payment...');
-        const customerId = await createCustomerId();
-        if (!customerId) {
-            console.error('Error getting customer ID');
-            return;
-        }
-        const sessionId = await getSessionId(customerId);
-        if (!sessionId) {
-            console.error('Error getting session ID');
-            return;
-        }
+        const sessionId = await getSessionIdFromServer(customerId);
         console.log('Session ID obtained:', sessionId);
-        // Launch modal for making payment
-        let container = $('#portalOneContainer');
-        container.portalOne();
-        let dialog = container.data('portalOne');
+        portalOneContainer.portalOne();
+        let dialog = portalOneContainer.data('portalOne');
         dialog.makePayment({
             'paymentCategory': 'CreditCard',
             'feeContext': 'PaymentWithFee',
@@ -110,7 +84,6 @@ $(document).ready(function() {
         });
     }
 
-    // Attach click event listeners to buttons
     $('#savePaymentMethodButton').on('click', launchSavePaymentMethodModal);
     $('#launchModalButton').on('click', launchMakePaymentModal);
 });

@@ -156,6 +156,25 @@ $(document).ready(function() {
         });
     }
 
+    async function launchManagePayMethModal() {
+        const sessionId = await getSessionIdFromServer(customerId);
+        portalOneContainer.portalOne();
+        let dialog = portalOneContainer.data('portalOne');
+
+        dialog.managePaymentMethods({ 
+            'customerId': customerId, 
+            'sessionId': sessionId, 
+            'acceptCreditCards': 'true', 
+            'acceptPrepaidCards': 'true', 
+            'paymentCategory': 'UserSelect', 
+            'userRoles' : 'CSR'
+        });
+    }
+
+    async function launchManagePayMethModalWithToken() {
+        console.log('launch modal...');
+    }
+
     async function launchMakePaymentModal() {
         const sessionId = await getSessionIdFromServer(customerId);
         portalOneContainer.portalOne();
@@ -194,8 +213,10 @@ $(document).ready(function() {
         });
     }
 
-    $('#launchModalButton').on('click', launchMakePaymentModal);
-    $('#launchModalButtonOption2').on('click', launchMakePaymentModalWithToken);
     $('#savePaymentMethodButton').on('click', launchSavePaymentMethodModal);
     $('#savePaymentMethodButtonOption2').on('click', launchSavePaymentMethodModalWithToken);
+    $('#managePayMeth1Button').on('click', launchManagePayMethModal);
+    $('#managePayMeth2Button').on('click', launchManagePayMethModalWithToken);    
+    $('#launchModalButton').on('click', launchMakePaymentModal);
+    $('#launchModalButtonOption2').on('click', launchMakePaymentModalWithToken);
 });

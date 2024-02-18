@@ -14,36 +14,6 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Practice receiving data as JSON
-/*
-THE PROBLEM: We are getting the select fields in the referer header as query params, while the body has multi-part data, even though we send 
-data url-encoded. This is because we are sending the form even though it wasn't submitted. Yes, a hack on the front end causing drama. 
-*/
-app.post('/submit-paymethod-data', (req, res) => {
-    const {
-        paymentCategory,
-        billingZip,
-        billingAddressStreet,
-        policyHolderName,
-        clientReferenceData1,
-        confirmationDisplay,
-        acceptCreditCards,
-        acceptPrepaidCards
-    } = req.body;
-
-    console.log('- Received data:');
-    console.log('-Payment Category:', paymentCategory);
-    console.log('-Billing Zip:', billingZip);
-    console.log('-Billing Address Street:', billingAddressStreet);
-    console.log('-Policy Holder Name:', policyHolderName);
-    console.log('-Client Reference Data 1:', clientReferenceData1);
-    console.log('-Confirmation Display:', confirmationDisplay);
-    console.log('-Accept Credit Cards:', acceptCreditCards);
-    console.log('-Accept Prepaid Cards:', acceptPrepaidCards);
-
-    res.send('Form submitted successfully!');
-});
-
 // Define a route for creating a customerId
 app.get('/createCustomerId', async (req, res) => {
     try {

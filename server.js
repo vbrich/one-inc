@@ -17,11 +17,9 @@ app.get('/', (req, res) => {
 app.get('/createCustomerId', async (req, res) => {
     try {
         const { externalCustomerId, portalKey } = req.query;
-        
         if (!externalCustomerId || !portalKey) {
             throw new Error('ExternalCustomerId and PortalKey are required');
         }
-
         const customerId = await createCustomerId(externalCustomerId, portalKey);
         res.json({ customerId });
     } catch (error) {
@@ -34,11 +32,9 @@ app.get('/createCustomerId', async (req, res) => {
 app.get('/getSessionId', async (req, res) => {
     try {
         const { customerId, portalKey } = req.query;
-
         if (!customerId || !portalKey) {
             throw new Error('CustomerId and PortalKey are required');
         }
-
         const sessionId = await getSessionId(customerId, portalKey);
         res.json({ sessionId });
     } catch (error) {
@@ -47,9 +43,34 @@ app.get('/getSessionId', async (req, res) => {
     }
 });
 
-// Start the server
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+// Define a route for create savePaymentMethodToken
+app.get('/savePaymentMethodToken', async (req, res) => {
+    try {
+        const { customerId, portalKey } = req.query;
+        if (!customerId || !portalKey) {
+            throw new Error('CustomerId and PortalKey are required');
+        }
+        const token = await savePaymentMethodToken(customerId, portalKey);
+        res.json({ token });
+    } catch (error) {
+        console.error('Error fetching token:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Define a route for create makePaymentToken
+app.get('/makePaymentToken', async (req, res) => {
+    try {
+        const { portalKey } = req.query;
+        if (!portalKey) {
+            throw new Error('PortalKey is required');
+        }
+        const token = await makePaymentToken(portalKey);
+        res.json({ token });
+    } catch (error) {
+        console.error('Error fetching token:', error.message);
+        res.status(500).json({ error: error.message });
+    }
 });
 
 // Function to get session ID from API
@@ -89,3 +110,89 @@ async function createCustomerId(externalCustomerId, portalKey) {
         throw new Error('Failed to create customer ID');
     }
 }
+
+async function savePaymentMethodToken(customerId, portalKey) {
+    try {
+        console.log('Creating customer ID...');
+        const response = await fetch('https://testportalone.processonepayments.com/Api/Api/AccessToken/Create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                Type: "Client",
+                Payload: {
+                    operation: "savePaymentMethod",
+                    paymentCategory: "CreditCard",
+                    billingZip: "95630",
+                    billingAddressStreet: "602 Coolidge Dr., Folsom, CA",
+                    policyHolderName: "John Smith",
+                    clientReferenceData1: "POL330701-02",
+                    confirmationDisplay: "true",
+                    acceptCreditCards: "true",
+                    acceptPrepaidCards: "false",
+                    extendedParameters: {
+                        key: "value"
+                    },
+                    customerId: customerId
+                },
+                PortalOneAuthenticationKey: portalKey
+            })
+        });
+        const data = await response.json();
+        console.log('Token created:', data.Token);
+        return data.Token;
+    } catch (error) {
+        console.error('Error creating token:', error.message);
+        throw new Error('Failed to create token');
+    }
+}
+
+async function makePaymentToken(portalKey) {
+    try {
+        console.log('Creating token...');
+        const response = await fetch('https://testportalone.processonepayments.com/Api/Api/AccessToken/Create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                Type: "Client",
+                Payload: {
+                    operation: "makePayment",
+                    paymentCategory: "CreditCard",
+                    feeContext: "PaymentWithFee",
+                    convenienceFeeType: "Renewal",
+                    amountContext: "AmountDueOnly",
+                    amountContextDefault: "minimumAmountDue",
+                    minAmountDue: "2107.98",
+                    billingZip: "12345",
+                    billingAddressStreet: "201 W. Mifflin St",
+                    policyHolderName: "John Smith",
+                    confirmationDisplay: "true",
+                    saveOption: "UserSelect",
+                    clientReferenceData1: "BLU-CB-1KI4YZIX",
+                    clientReferenceData2: "1INC",
+                    clientReferenceData3: "",
+                    clientReferenceData4: "POL-12345-ClientReferenceData4",
+                    clientReferenceData5: "POL-12345-ClientReferenceData5",
+                    ExtendedParameters: { key: "value" },
+                    accountGroupCode: "Default"
+                },
+                PortalOneAuthenticationKey: portalKey
+            })
+        });
+        const data = await response.json();
+        console.log('Token created:', data.Token);
+        return data.Token;
+    } catch (error) {
+        console.error('Error creating token:', error.message);
+        throw new Error('Failed to create token');
+    }
+}
+
+// Start the server
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
+

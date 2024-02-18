@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Demos</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
+        <!-- Top section with Portal Authentication Key and External Customer ID -->
         <h1 class="text-center mb-4">Payment Demos</h1>
-
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
@@ -25,47 +26,57 @@
             </div>
         </div>
 
+        <!-- Customer ID section -->
         <div class="row">
             <div class="col-md-12">
-                <button class="btn btn-warning" id="getCustomerIdButton">GenerateCustomerId</button>
-                <input type="text" class="form-control" id="customerIdDisplay" readonly>
+                <button class="btn btn-warning" id="getCustomerIdButton">Generate Customer ID</button>
+                <input type="text" class="form-control mt-2" id="customerIdDisplay" readonly>
             </div>
         </div>
 
-        <div class="row mt-4">
+        <button id="loadDataButton">Load Data</button>
+
+
+        <div class="row mt-4 mb-4">
             <div class="col-md-12">
-                <h4>Basic Modals</h4>
-                <p><em>Requires a customerId. Sends key data via the modal, client-side.</em></p> 
-                <button class="btn btn-success" id="savePaymentMethodButton">SavePayMethod</button>
-                <button class="btn btn-success ml-2" id="launchModalButton">MakePayment</button>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="savePayMethod-tab" data-toggle="tab" href="#savePayMethod" role="tab" aria-controls="savePayMethod" aria-selected="true">Save Payment Method</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="makePayment-tab" data-toggle="tab" href="#makePayment" role="tab" aria-controls="makePayment" aria-selected="false">Make Payment</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+
+                    <!-- Save Payment Method Tab Content -->
+                    <div class="tab-pane fade show active" id="savePayMethod" role="tabpanel" aria-labelledby="savePayMethod-tab">
+                        <div class="mt-4"> <!-- Add margin-bottom to the title -->
+                            <h5>Save Payment Method</h5>
+                        </div>
+                        <div class="mb-4"> <!-- Add margin-bottom to the content -->
+                            <p><em>Requires a customerId. The blue button uses a token, while the green sends data via the client-side.</em></p>
+                            <div id="savePayMethodFormContainer"></div>
+                            <button type="button" class="btn btn-success" id="savePaymentMethodButton">Save Payment Method</button>
+                            <button type="button" class="btn btn-primary" id="savePaymentMethodButtonOption2">Save Payment Method</button>
+                        </div>
+                    </div>
+
+                    <!-- Make Payment Tab Content -->
+                    <div class="tab-pane fade" id="makePayment" role="tabpanel" aria-labelledby="makePayment-tab">
+                        <div class="mt-4"> <!-- Add margin-bottom to the title -->                      
+                        </div>
+                        <div class="mb-4"> <!-- Add margin-bottom to the content -->
+                            <p><em>Requires a customerId. The blue button uses a token, while the green sends data via the client-side.</em></p>
+                            <button class="btn btn-success ml-2" id="launchModalButton">Make Payment</button>
+                            <button class="btn btn-primary ml-2" id="launchModalButtonOption2">Make Payment</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-<!-- JUST MAKE THESE CALLS IN MODAL REQEUSTS 
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <button class="btn btn-primary" id="getSavePaymentMethodTokenButton">Get SavePayMthd Token</button>
-                <input type="text" class="form-control" id="savePayMethodTokenDisplay" readonly>
-            </div>
-        </div>
-
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <button class="btn btn-primary" id="getMakePaymentTokenButton">Get MakePayment Token</button>
-                <input type="text" class="form-control" id="makePaymentTokenDisplay" readonly>
-            </div>
-        </div>        
--->
-
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <h4>Modals via Tokens</h4>
-                <p><em>Requires a customerId. Tokenizes key JSON data via server so we can safely send tokens from the modal client-side.</em></p> 
-                <button class="btn btn-primary" id="savePaymentMethodButtonOption2">SavePayMethod</button>
-                <button class="btn btn-primary ml-2" id="launchModalButtonOption2">MakePayment</button>
-            </div>
-        </div>
-
+        <!-- Container for the modal -->
         <div class="row mt-4">
             <div class="col-md-12">
                 <div id="portalOneContainer"></div>
@@ -74,6 +85,42 @@
     </div>
 
     <!-- Scripts -->
+    <script>
+        // JavaScript to fetch and inject form content from the savePaymentMethodForm.html
+        fetch('savePaymentMethodForm.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('savePayMethodFormContainer').innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Error fetching form content:', error);
+            });
+    </script>  
+    <script>
+        // Wait for the DOM to be fully loaded
+        /*
+        console.log('DATA FROM JSON JUST FILLED IN OUR HTML');
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('demo-data.json')
+                .then(response => response.json())
+                .then(data => {
+                    // console.log(data); // Log the retrieved data            
+                    document.getElementById('billingZip').value = data.billingZip;
+                    document.getElementById('billingAddressStreet').value = data.billingAddressStreet;
+                    document.getElementById('policyHolderName').value = data.policyHolderName;
+                    document.getElementById('clientReferenceData1').value = data.clientReferenceData1;
+                    document.getElementById('confirmationDisplay').value = data.confirmationDisplay;
+                    // document.getElementById('paymentCategory').value = data.paymentCategory;
+                    document.getElementById('confirmationDisplay').value = data.confirmationDisplay;
+                    document.getElementById('acceptCreditCards').value = data.acceptCreditCards;
+                    document.getElementById('acceptPrepaidCards').value = data.acceptPrepaidCards;
+                })
+                .catch(error => {
+                    console.error('Error fetching preloaded data:', error);
+                });
+        });
+        */
+    </script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://testportalone.processonepayments.com/GenericModalV2/PortalOne.js" async defer></script>

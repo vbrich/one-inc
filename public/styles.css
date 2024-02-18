@@ -1,0 +1,11 @@
+/* Style for active tab */
+.nav-tabs .nav-item .nav-link.active {
+    background-color: #d4dae1; /* Subtle grey background */
+    color: #007bff; /* Blue color for active tab */
+}
+
+/* Style for inactive tab */
+.nav-tabs .nav-item .nav-link {
+    background-color: #e9ecef; /* Light grey background for inactive tabs */
+    color: #6c757d; /* Dark grey color for inactive tabs */
+}

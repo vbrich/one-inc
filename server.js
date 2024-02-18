@@ -1,16 +1,27 @@
 const express = require('express');
 const path = require('path');
 const fetch = require('node-fetch');
-
 const app = express();
 const port = 3000;
 
+let paymentCategory, billingZip, billingAddressStreet, policyHolderName, clientReferenceData1, confirmationDisplay, acceptCreditCards, acceptPrepaidCards;
+
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true })); // Middleware to parse form data
+app.use(express.json()); // Middleware to parse form data
 
 // Define route for serving the HTML file
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Get payment method data from our front end so we can use it in other calls
+app.post('/submit-paymethod-data', (req, res) => {
+    const formData = req.body;
+    populateVariables(formData);
+    console.log('Received form data:', formData);
+    res.send('Form submitted successfully!');
 });
 
 // Define a route for creating a customerId
@@ -73,6 +84,17 @@ app.get('/makePaymentToken', async (req, res) => {
     }
 });
 
+function populateVariables(formData) {
+    paymentCategory = formData.paymentCategory;
+    billingZip = formData.billingZip;
+    billingAddressStreet = formData.billingAddressStreet;
+    policyHolderName = formData.policyHolderName;
+    clientReferenceData1 = formData.clientReferenceData1;
+    confirmationDisplay = formData.confirmationDisplay;
+    acceptCreditCards = formData.acceptCreditCards;
+    acceptPrepaidCards = formData.acceptPrepaidCards;
+}
+
 // Function to get session ID from API
 async function getSessionId(customerId, portalKey) {
     try {
@@ -123,14 +145,14 @@ async function savePaymentMethodToken(customerId, portalKey) {
                 Type: "Client",
                 Payload: {
                     operation: "savePaymentMethod",
-                    paymentCategory: "CreditCard",
-                    billingZip: "95630",
-                    billingAddressStreet: "602 Coolidge Dr., Folsom, CA",
-                    policyHolderName: "John Smith",
-                    clientReferenceData1: "POL330701-02",
-                    confirmationDisplay: "true",
-                    acceptCreditCards: "true",
-                    acceptPrepaidCards: "false",
+                    paymentCategory: paymentCategory,
+                    billingZip: billingZip,
+                    billingAddressStreet: billingAddressStreet,
+                    policyHolderName: policyHolderName,
+                    clientReferenceData1: clientReferenceData1,
+                    confirmationDisplay: confirmationDisplay,
+                    acceptCreditCards: acceptCreditCards,
+                    acceptPrepaidCards: acceptPrepaidCards,
                     extendedParameters: {
                         key: "value"
                     },

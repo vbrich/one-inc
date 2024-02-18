@@ -4,11 +4,9 @@ const fetch = require('node-fetch');
 const app = express();
 const port = 3000;
 
-let paymentCategory, billingZip, billingAddressStreet, policyHolderName, clientReferenceData1, confirmationDisplay, acceptCreditCards, acceptPrepaidCards;
-
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.urlencoded({ extended: true })); // Middleware to parse form data
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // Middleware to parse form data
 
 // Define route for serving the HTML file
@@ -16,11 +14,33 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Get payment method data from our front end so we can use it in other calls
+// Practice receiving data as JSON
+/*
+THE PROBLEM: We are getting the select fields in the referer header as query params, while the body has multi-part data, even though we send 
+data url-encoded. This is because we are sending the form even though it wasn't submitted. Yes, a hack on the front end causing drama. 
+*/
 app.post('/submit-paymethod-data', (req, res) => {
-    const formData = req.body;
-    populateVariables(formData);
-    console.log('Received form data:', formData);
+    const {
+        paymentCategory,
+        billingZip,
+        billingAddressStreet,
+        policyHolderName,
+        clientReferenceData1,
+        confirmationDisplay,
+        acceptCreditCards,
+        acceptPrepaidCards
+    } = req.body;
+
+    console.log('- Received data:');
+    console.log('-Payment Category:', paymentCategory);
+    console.log('-Billing Zip:', billingZip);
+    console.log('-Billing Address Street:', billingAddressStreet);
+    console.log('-Policy Holder Name:', policyHolderName);
+    console.log('-Client Reference Data 1:', clientReferenceData1);
+    console.log('-Confirmation Display:', confirmationDisplay);
+    console.log('-Accept Credit Cards:', acceptCreditCards);
+    console.log('-Accept Prepaid Cards:', acceptPrepaidCards);
+
     res.send('Form submitted successfully!');
 });
 
@@ -84,17 +104,6 @@ app.get('/makePaymentToken', async (req, res) => {
     }
 });
 
-function populateVariables(formData) {
-    paymentCategory = formData.paymentCategory;
-    billingZip = formData.billingZip;
-    billingAddressStreet = formData.billingAddressStreet;
-    policyHolderName = formData.policyHolderName;
-    clientReferenceData1 = formData.clientReferenceData1;
-    confirmationDisplay = formData.confirmationDisplay;
-    acceptCreditCards = formData.acceptCreditCards;
-    acceptPrepaidCards = formData.acceptPrepaidCards;
-}
-
 // Function to get session ID from API
 async function getSessionId(customerId, portalKey) {
     try {
@@ -135,7 +144,7 @@ async function createCustomerId(externalCustomerId, portalKey) {
 
 async function savePaymentMethodToken(customerId, portalKey) {
     try {
-        console.log('Creating customer ID...');
+        console.log('savePaymentMethodToken was hit...');
         const response = await fetch('https://testportalone.processonepayments.com/Api/Api/AccessToken/Create', {
             method: 'POST',
             headers: {
@@ -145,14 +154,14 @@ async function savePaymentMethodToken(customerId, portalKey) {
                 Type: "Client",
                 Payload: {
                     operation: "savePaymentMethod",
-                    paymentCategory: paymentCategory,
-                    billingZip: billingZip,
-                    billingAddressStreet: billingAddressStreet,
-                    policyHolderName: policyHolderName,
-                    clientReferenceData1: clientReferenceData1,
-                    confirmationDisplay: confirmationDisplay,
-                    acceptCreditCards: acceptCreditCards,
-                    acceptPrepaidCards: acceptPrepaidCards,
+                    paymentCategory: "CreditCard",
+                    billingZip: "95630",
+                    billingAddressStreet: "123 Test Way Folsom, CA",
+                    policyHolderName: "John Smith",
+                    clientReferenceData1: "P0-111-222",
+                    confirmationDisplay: true,
+                    acceptCreditCards: true,
+                    acceptPrepaidCards: true,
                     extendedParameters: {
                         key: "value"
                     },

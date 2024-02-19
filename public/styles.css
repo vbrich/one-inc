@@ -2,10 +2,22 @@
 .nav-tabs .nav-item .nav-link.active {
     background-color: #d4dae1; /* Subtle grey background */
     color: #007bff; /* Blue color for active tab */
+    border: 1px solid #007bff; /* Add border to active tab */
+    border-bottom-color: transparent; /* Hide bottom border for active tab */
+    border-radius: 0.25rem 0.25rem 0 0; /* Add border radius to top corners of active tab */
 }
 
 /* Style for inactive tab */
 .nav-tabs .nav-item .nav-link {
     background-color: #e9ecef; /* Light grey background for inactive tabs */
     color: #6c757d; /* Dark grey color for inactive tabs */
+    border: 1px solid transparent; /* Add border to inactive tabs */
+    border-bottom-color: transparent; /* Hide bottom border for inactive tabs */
+    border-radius: 0.25rem 0.25rem 0 0; /* Add border radius to top corners of inactive tabs */
+    padding: 0.5rem 1rem; /* Add padding to inactive tabs */
+    margin-right: 2px; /* Add a slight margin between inactive tabs */
+}
+
+.light-gray-text {
+    color: #c5c5c5; /* Adjust the color code as needed */
 }

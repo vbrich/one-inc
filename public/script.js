@@ -213,10 +213,77 @@ $(document).ready(function() {
         });
     }
 
+    async function quickPayModalBasic() {
+        const sessionId = await getSessionIdFromServer(customerId);
+        portalOneContainer.portalOne();
+        let dialog = portalOneContainer.data('portalOne');
+
+        dialog.quickPay({ 
+            'sessionId': sessionId, 
+            'userRoles' : 'agent'
+        });
+    }
+
+    async function csrPayModalBasic() {
+        const sessionId = await getSessionIdFromServer(customerId);
+        portalOneContainer.portalOne();
+        let dialog = portalOneContainer.data('portalOne');
+
+        dialog.csrMakePayment({ 
+            'allowClosing':true,
+            'displayMode': 'Modal',
+            'loadingIndication': true,
+            'paymentCategory': 'CreditCard',
+            'amountContext': 'SelectOrEnterAmount',
+            'billingZip': '95630',
+            'billingAddressStreet': '602 Coolidge Dr., Folsom, CA',
+            'customerId': customerId,
+            'sessionId': sessionId,
+            'email': 'example@example.com',
+            'phoneNumber': '1234567890',
+            'extendedParameters': {'key': 'value'},
+            'policies':[
+                {
+                    'feeContext': 'PaymentWithFee',
+                    'minAmountDue': '12.00',
+                    'accountBalance': '120.00',
+                    'policyHolderName': 'John Smith',
+                    'accountGroupCode': 'Default',
+                    'clientReferenceData1': 'POL330701-01',
+                    'clientReferenceData2': 'someData2',
+                    'clientReferenceData3': 'someData3',
+                    'clientReferenceData4': 'someData4',
+                    'clientReferenceData5': 'someData5',
+                    'acceptCreditCards': 'false',
+                    'acceptPrepaidCards': 'false',
+                    'convenienceFeeType': 'Default'
+                },
+                {
+                    'feeContext': 'PaymentWithFee',
+                    'minAmountDue': '12.00',
+                    'accountBalance': '120.00',
+                    'policyHolderName': 'John Smith',
+                    'accountGroupCode': 'Default',
+                    'clientReferenceData1': 'POL330701-02',
+                    'clientReferenceData2': 'someData2',
+                    'clientReferenceData3': 'someData3',
+                    'clientReferenceData4': 'someData4',
+                    'clientReferenceData5': 'someData5',
+                    'convenienceFeeType': 'Default'
+                }
+            ]
+        });    
+    }
+
     $('#savePaymentMethodButton').on('click', launchSavePaymentMethodModal);
     $('#savePaymentMethodButtonOption2').on('click', launchSavePaymentMethodModalWithToken);
     $('#managePayMeth1Button').on('click', launchManagePayMethModal);
     $('#managePayMeth2Button').on('click', launchManagePayMethModalWithToken);    
     $('#launchModalButton').on('click', launchMakePaymentModal);
     $('#launchModalButtonOption2').on('click', launchMakePaymentModalWithToken);
+    $('#quickPayButton').on('click', quickPayModalBasic);
+
+    $('#csrPayButton').on('click', csrPayModalBasic);
+
+
 });

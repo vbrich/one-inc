@@ -6,150 +6,56 @@
     <title>Payment Demos</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Custom styles for mobile responsiveness */
+        @media (max-width: 576px) {
+            .form-group {
+                margin-bottom: 15px; /* Add some space between form elements */
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
+
         <!-- Top section with Portal Authentication Key and External Customer ID -->
-        <h1 class="text-center mb-4">Bill Presentment Demo</h1>
+        <h1 class="text-center mb-4">Demo</h1>
+
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="portalKey">PortalAuthenticationKey:</label>
+                    <label for="portalKey">Portal Authentication Key</label>
                     <input type="text" class="form-control" id="portalKey" placeholder="Enter Portal Authentication Key" value="53471279-ce51-4e8f-830f-374dad91e561">
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="externalCustomerId">ExternalCustomerID:</label>
+                    <label for="externalCustomerId">External Customer ID</label>
                     <input type="text" class="form-control" id="externalCustomerId" placeholder="Enter External Customer ID" value="3333-4444-5555">
                 </div>
             </div>
         </div>
 
         <!-- Customer ID section -->
+        <br><br>
         <div class="row">
             <div class="col-md-12">
-                <button class="btn btn-warning" id="getCustomerIdButton">Generate Customer ID</button>
+                <h5>Step 1: Generate Customer ID</h5>
+                <p>Click the button below to generate a customer ID:</p>
+                <button class="btn custom-btn btn-block" id="getCustomerIdButton">Generate Customer ID</button>
                 <input type="text" class="form-control mt-2" id="customerIdDisplay" readonly>
             </div>
         </div>
 
-        <br>
-        <button class="btn btn-warning" id="loadDataButton">Load Demo Data</button>
-
-        <div class="row mt-4 mb-4">
+        <br><br>
+        <div class="row">
             <div class="col-md-12">
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="savePayMethod-tab" data-toggle="tab" href="#savePayMethod" role="tab" aria-controls="savePayMethod" aria-selected="true">Save Payment Method</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="managePayment-tab" data-toggle="tab" href="#managePayment" role="tab" aria-controls="managePayment" aria-selected="false">Manage Payment Methods</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="makePayment-tab" data-toggle="tab" href="#makePayment" role="tab" aria-controls="makePayment" aria-selected="false">Make Payment</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="quickPay-tab" data-toggle="tab" href="#quickPay" role="tab" aria-controls="quickPay" aria-selected="false">Quick Pay</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="csrPayment-tab" data-toggle="tab" href="#csrPayment" role="tab" aria-controls="csrPayment" aria-selected="false">CSR Payment</a>
-                    </li>
-                </ul>
-                <div class="tab-content" id="myTabContent">
-        
-                    <!-- Save Payment Method Tab Content -->
-                    <div class="tab-pane fade show active" id="savePayMethod" role="tabpanel" aria-labelledby="savePayMethod-tab">
-                        <div class="mt-4"> <!-- Add margin-bottom to the title -->
-                        </div>
-                        <div class="mb-4"> <!-- Add margin-bottom to the content -->
-                            <p class="light-gray-text"><em>The Make Payment modal processes an inbound insurance premium payment. This modal provides the flexibility to manage information that is presented to the user at each policy transaction level, 
-                                as well as to enable users to make a one-time payment on their policy. Payments can be made by an insured, or by a CSR/Agent on behalf of the insured.</em></p>
-                            <p><em>Token version is just using hardcoded data at the moment.</em></p>
-                            <div id="savePayMethodFormContainer"></div>
-                            <button type="button" class="btn btn-success" id="savePaymentMethodButton">Basic</button>
-                            <button type="button" class="btn btn-primary" id="savePaymentMethodButtonOption2">Token</button>
-                        </div>
-                    </div>
-        
-                    <!-- Manage Payment Methods Tab Content -->
-                    <div class="tab-pane fade" id="managePayment" role="tabpanel" aria-labelledby="managePayment-tab">
-                        <div class="mt-4"> <!-- Add margin-bottom to the title -->                      
-                        </div>
-                        <div class="mb-4"> <!-- Add margin-bottom to the content -->
-                            <p class="light-gray-text"><em>The Manage Payment Method modal gives users the ability to view, update and add payment methods in their Digital Wallet. The main benefit to using this modal is the ability for users to manage 
-                                their Digital Wallets in one central location. Payments can be managed by an insured, or by a CSR/Agent on behalf of the insured.</em></p>
-                            <p><em>Both versions using hardcoded data</em></p>
-                            <button class="btn btn-success ml-2" id="managePayMeth1Button">Basic</button>
-                            <button class="btn btn-primary ml-2" id="managePayMeth2Button" data-toggle="modal" data-target="#customAlertModal">Token</button>
-                            <p><pre id="managePayMethodSample"></pre></p>
-                        </div>
-                    </div>
-
-                    <!-- Make Payment Tab Content -->
-                    <div class="tab-pane fade" id="makePayment" role="tabpanel" aria-labelledby="makePayment-tab">
-                        <div class="mt-4"> <!-- Add margin-bottom to the title -->                      
-                        </div>
-                        <div class="mb-4"> <!-- Add margin-bottom to the content -->
-                            <p class="light-gray-text"><em>The Make Payment modal processes an inbound insurance premium payment. This modal provides the flexibility to manage information that is presented to the user at each policy transaction level, 
-                                as well as to enable users to make a one-time payment on their policy. Payments can be made by an insured, or by a CSR/Agent on behalf of the insured.</em></p>
-                            <p><em>Both versions using hardcoded data</em></p>
-                            <button class="btn btn-success ml-2" id="launchModalButton">Basic</button>
-                            <button class="btn btn-primary ml-2" id="launchModalButtonOption2">Token</button>
-                            <p><pre id="manageMakePaymentSample"></pre></p>
-
-                        </div>
-                    </div>
-                    
-                    <!-- Quick Pay Tab Content -->
-                    <div class="tab-pane fade" id="quickPay" role="tabpanel" aria-labelledby="quickPay-tab">
-                        <div class="mt-4">
-                            <h5>Quick Pay</h5>
-                        </div>
-                        <div class="mb-4">
-                            <p class="light-gray-text"><em>A policyholder can make a basic one-time payment, with either a credit card or bank account, after lightly authenticating themselves.</em></p>
-                            <button class="btn btn-success ml-2" id="quickPayButton">Basic</button>
-                            <button class="btn btn-primary ml-2" id="quickPayButtonHtml" data-toggle="modal" data-target="#customAlertModal">Html</button>
-                            <button class="btn btn-secondary ml-2" id="quickPayButtonToken" data-toggle="modal" data-target="#customAlertModal">Token</button>
-                            <p><pre id="quickPaySample"></pre></p>
-                        </div>
-                    </div>
-
-                    <!-- CSR Payment Tab Content -->
-                    <div class="tab-pane fade" id="csrPayment" role="tabpanel" aria-labelledby="csrPayment-tab">
-                        <div class="mt-4">
-                            <h5>CSR Payment</h5>
-                        </div>
-                        <div class="mb-4">
-                            <p class="light-gray-text"><em>The One Inc CSR facing Payment Modal allows CSRs to help insureds by providing a secure way to capture policy holder's payment information to make an insurance payment.</em></p>
-                            <button class="btn btn-success ml-2" id="csrPayButton">Basic</button>
-                            <button class="btn btn-primary ml-2" id="csrPayButtonToken" data-toggle="modal" data-target="#customAlertModal">Token</button>
-                        </div>
-                    </div>
-                    
-                </div>
+                <h5>Step 2: Make Payment</h5>
+                <p>After generating the customer ID, initiate the payment process:</p>
+                <button class="btn custom-btn btn-block" id="launchModalButton">Make Payment</button>
             </div>
         </div>
 
-        <!-- Bootstrap modal for custom alert -->
-        <div class="modal fade" id="customAlertModal" tabindex="-1" role="dialog" aria-labelledby="customAlertModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="customAlertModalLabel">Alert</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Not implemented yet</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Container for the modal -->
         <div class="row mt-4">
@@ -160,67 +66,6 @@
     </div>
 
     <!-- Scripts -->
-    <script>
-        // Fetch and Inject savePaymentMethodForm.html
-        fetch('paymethod.html')
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById('savePayMethodFormContainer').innerHTML = html;
-            })
-            .catch(error => {
-                console.error('Error fetching form content:', error);
-            });
-    </script>  
-    <script>
-        const managePayMethodSample = 
-        { 
-            'customerId': 'e3a6fa12-d448-4686-a5ff-7f821f0b0c5d', 
-            'sessionId': 'a3ed1852-642b-4d0c-a5aa-a89b575af4ce', 
-            'acceptCreditCards': 'true', 
-            'acceptPrepaidCards': 'true', 
-            'paymentCategory': 'UserSelect', 
-            'userRoles' : 'CSR'
-        };
-
-        const makePaymentSample = 
-        {
-            "Type": "Client",
-            "Payload": {
-                "operation": "makePayment",
-                "paymentCategory": "CreditCard",
-                "feeContext": "PaymentWithFee",
-                "convenienceFeeType": "Renewal",
-                "amountContext": "AmountDueOnly",
-                "amountContextDefault": "minimumAmountDue",
-                "minAmountDue": "2107.98",
-                "billingZip": "12345",
-                "billingAddressStreet": "201 W. Mifflin St",
-                "policyHolderName": "John Smith",
-                "confirmationDisplay": "true",
-                "saveOption": "UserSelect",
-                "clientReferenceData1": "BLU-CB-1KI4YZIX",
-                "clientReferenceData2": "1INC",
-                "clientReferenceData3": "",
-                "clientReferenceData4": "POL-12345-ClientReferenceData4",
-                "clientReferenceData5": "POL-12345-ClientReferenceData5",
-                "ExtendedParameters": {"key": "value"},
-                "accountGroupCode": "Default"
-            },
-            "PortalOneAuthenticationKey": "[PortalOneAuthenticationKey]"
-        };
-
-        const quickPaymentSample = 
-        {  
-            'sessionId': 'a3ed1852-642b-4d0c-a5aa-a89b575af4ce', 
-            'userRoles' : 'agent'
-        };
-
-        // Display JSON data in the browser
-        document.getElementById("managePayMethodSample").textContent = JSON.stringify(managePayMethodSample, null, 2);
-        document.getElementById("manageMakePaymentSample").textContent = JSON.stringify(makePaymentSample, null, 2);
-        document.getElementById("quickPaySample").textContent = JSON.stringify(quickPaymentSample, null, 2);
-
-    </script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://testportalone.processonepayments.com/GenericModalV2/PortalOne.js" async defer></script>

@@ -44,21 +44,6 @@ app.get('/getSessionId', async (req, res) => {
     }
 });
 
-// Define a route for create savePaymentMethodToken
-app.get('/savePaymentMethodToken', async (req, res) => {
-    try {
-        const { customerId, portalKey } = req.query;
-        if (!customerId || !portalKey) {
-            throw new Error('CustomerId and PortalKey are required');
-        }
-        const token = await savePaymentMethodToken(customerId, portalKey);
-        res.json({ token });
-    } catch (error) {
-        console.error('Error fetching token:', error.message);
-        res.status(500).json({ error: error.message });
-    }
-});
-
 // Define a route for create makePaymentToken
 app.get('/makePaymentToken', async (req, res) => {
     try {
@@ -109,43 +94,6 @@ async function createCustomerId(externalCustomerId, portalKey) {
     } catch (error) {
         console.error('Error creating customer ID:', error.message);
         throw new Error('Failed to create customer ID');
-    }
-}
-
-async function savePaymentMethodToken(customerId, portalKey) {
-    try {
-        console.log('savePaymentMethodToken was hit...');
-        const response = await fetch('https://testportalone.processonepayments.com/Api/Api/AccessToken/Create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                Type: "Client",
-                Payload: {
-                    operation: "savePaymentMethod",
-                    paymentCategory: "CreditCard",
-                    billingZip: "95630",
-                    billingAddressStreet: "123 Test Way Folsom, CA",
-                    policyHolderName: "John Smith",
-                    clientReferenceData1: "P0-111-222",
-                    confirmationDisplay: true,
-                    acceptCreditCards: true,
-                    acceptPrepaidCards: true,
-                    extendedParameters: {
-                        key: "value"
-                    },
-                    customerId: customerId
-                },
-                PortalOneAuthenticationKey: portalKey
-            })
-        });
-        const data = await response.json();
-        console.log('Token created:', data.Token);
-        return data.Token;
-    } catch (error) {
-        console.error('Error creating token:', error.message);
-        throw new Error('Failed to create token');
     }
 }
 

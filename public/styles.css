@@ -21,3 +21,16 @@
 .light-gray-text {
     color: #c5c5c5; /* Adjust the color code as needed */
 }
+
+/* Custom CSS */
+.custom-btn {
+    background-color: darkblue; /* Change to the color you prefer */
+    color: white; /* Text color */
+    border-color: blue; /* Border color */
+}
+
+.custom-btn:hover {
+    background-color: blue; /* Change to the hover color you prefer */
+    border-color: darkblue; /* Border color on hover */
+    color: white; 
+}

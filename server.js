@@ -114,7 +114,7 @@ async function makePaymentToken(portalKey) {
                     convenienceFeeType: "Renewal",
                     amountContext: "AmountDueOnly",
                     amountContextDefault: "minimumAmountDue",
-                    minAmountDue: "2107.98",
+                    minAmountDue: "200.00",
                     billingZip: "12345",
                     billingAddressStreet: "201 W. Mifflin St",
                     policyHolderName: "John Smith",

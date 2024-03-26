@@ -8,6 +8,7 @@ $(document).ready(function() {
     let customerId = null;
     let portalKey = portalKeyInput.val();
     let makePaymentToken = null;
+    let externalCustomerId = null;
 
     $('#getCustomerIdButton').click(async function() {
         // Execute our customerId button to actually convert the externalCustomerId to the customerId
@@ -33,6 +34,7 @@ $(document).ready(function() {
         try {
             const response = await fetch(`/createCustomerId?externalCustomerId=${externalCustomerId}&portalKey=${portalKey}`);
             const data = await response.json();
+            console.log('CustomerId = ' + data.customerId);
             return data.customerId;
         } catch (error) {
             console.error('Error fetching customer ID from server:', error.message);
@@ -44,6 +46,7 @@ $(document).ready(function() {
         try {
             const response = await fetch(`/getSessionId?customerId=${customerId}&portalKey=${portalKey}`);
             const data = await response.json();
+            console.log('SessionId: ' + data.sessionId);
             return data.sessionId;
         } catch (error) {
             console.error('Error fetching session ID from server:', error.message);
@@ -55,7 +58,7 @@ $(document).ready(function() {
         try {
             const response = await fetch(`/makePaymentToken?portalKey=${portalKey}`);
             const data = await response.json();
-            console.log(data);
+            console.log(JSON.stringify(data));
             return data.token;
         } catch (error) {
             console.error('Error fetching makePayment token from server:', error.message);
@@ -65,6 +68,7 @@ $(document).ready(function() {
 
     async function launchMakePaymentModal() {
         const sessionId = await getSessionIdFromServer(customerId);
+        console.log('In launch make payment modal and using sessionId: ' + sessionId + ' and customerId: ' + customerId);
         portalOneContainer.portalOne();
         let dialog = portalOneContainer.data('portalOne');
         dialog.makePayment({
@@ -91,6 +95,7 @@ $(document).ready(function() {
     async function launchMakePaymentModalWithToken() {
         const sessionId = await getSessionIdFromServer(customerId);
         const token = await getMakePaymentTokenFromServer(portalKey);
+        console.log('In launch launchMakePaymentModalWithToken using sessionId: ' + sessionId + ' and token: ' + token);
         portalOneContainer.portalOne();
         let portalOne = portalOneContainer.data('portalOne');
         portalOne.run({
